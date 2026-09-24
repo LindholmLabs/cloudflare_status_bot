@@ -10,3 +10,6 @@ A minimal cloudflare worker for serving status of a selection of websites/servic
 5. In cloudflare dashboard navigate to created worker -> settings -> add environment variable
 6. Add Key: "URLS" and Value: \<comma separated list of URLS\>. Example: "https://foo.com, https://bar.com".
    
+## Result
+<img width="488" height="409" alt="bild" src="https://github.com/user-attachments/assets/037404b3-8272-45ef-95f5-427be6c810e8" />
+A minimal status dashboard, that is incredibly easy to develop and deploy using cloudflare workers. 
