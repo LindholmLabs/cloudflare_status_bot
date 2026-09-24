@@ -38,8 +38,11 @@ function parseUrlsFromEnv() {
 
 async function responseIsOk(url) {
   try {
-    const response = await fetch(url);
-    return "<span style='color:green;'>online</span>";
+    const response = await fetch(url, { redirect: "follow" });
+    if (response.status < 500) {
+      return "<span style='color:green;'>online</span>";
+    }
+    return "<span style='color:red;'>offline</span>";
   } catch {
     return "<span style='color:red;'>offline</span>";
   }
