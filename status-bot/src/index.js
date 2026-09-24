@@ -1,15 +1,46 @@
-/**
- * Welcome to Cloudflare Workers! This is your first worker.
- *
- * - Run `npm run dev` in your terminal to start a development server
- * - Open a browser tab at http://localhost:8787/ to see your worker in action
- * - Run `npm run deploy` to publish your worker
- *
- * Learn more at https://developers.cloudflare.com/workers/
- */
+
 
 export default {
-	async fetch(request, env, ctx) {
-		return new Response("Hello World!");
-	},
+  async fetch(request) {
+    const urls = parseUrlsFromEnv();
+    const now = new Date();
+    let output = "";
+
+    for (const url of urls) {
+      output += `<tr><td>${url}</td><td>${await(responseIsOk(url))}</td></tr>`
+    }
+
+    const html = `<!DOCTYPE html>
+		<body>
+		  <h1>STATUS</h1>
+      <table>
+        <tr>
+          <td>Source</td>
+          <td>Status</td>
+        </tr>
+		    ${output}
+      </table>
+      <p>Last updated: ${now.toISOString()}</p>
+		</body>`;
+
+    return new Response(html, {
+      headers: {
+        "content-type": "text/html;charset=UTF-8",
+      },
+    });
+  },
 };
+
+function parseUrlsFromEnv() {
+  const urls = process.env.URLS || "";
+  return urls.split(",");
+}
+
+async function responseIsOk(url) {
+  try {
+    const response = await fetch(url);
+    return "<span style='color:green;'>online</span>";
+  } catch {
+    return "<span style='color:red;'>offline</span>";
+  }
+}
